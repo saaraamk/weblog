@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Post
+from .models import Post , Comment
 
 
 def post_list(request):
@@ -10,7 +10,8 @@ def post_list(request):
 
 def post_detail(request,post_id):
     post = Post.objects.get(pk = post_id)
-    context = {'post' : post}
+    comments = Comment.objects.filter(post=post)
+    context = {'post' : post , 'comments': comments}
     return render(request, 'posts/post_detail.html', context=context)
 
 def index(request):
