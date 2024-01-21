@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse , HttpResponseRedirect
 from .models import Post , Comment
+from .forms import PostForm
 
 
 def post_list(request):
@@ -20,3 +21,15 @@ def index(request):
 
 def home(request):
     return HttpResponse("<h3> here is what i want to share<h3>")
+
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            print(type(form.cleaned_data))
+            print(form.cleaned_data)
+            Post.object.create(**form.cleaned_date)
+            return HttpResponseRedirect('/posts/')
+    else:
+        form = PostForm()
+        return render(request , 'posts/post_create.html', {'form':form})
